@@ -3,15 +3,6 @@ export class BasePage {
         this.page = page;
     }
 
-    async waitForElement(selector) {
-        await this.page.waitForSelector(selector, { state: 'visible' });
-    }
-}
-export class BasePage {
-    constructor(page) {
-        this.page = page;
-    }
-
     // Common method to wait for an element
     async waitForElement(selector) {
         await this.page.waitForSelector(selector, { state: 'visible' });
