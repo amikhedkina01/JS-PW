@@ -7,7 +7,8 @@ test.describe('Login Tests', () => {
     let loginPage;
     let productsPage;
 
-    test.beforeEach(async ({ page }) => {
+    test.beforeEach(async ({ page }) => { // here i have an error with SyntaxError: pages/BasePage.js: Identifier 'BasePage' has already been declared. (10:13)playwright
+
         loginPage = new LoginPage(page);
         productsPage = new ProductsPage(page);
         await page.goto(CONFIG.baseURL);
