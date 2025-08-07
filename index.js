@@ -455,3 +455,8 @@
 // Tom.info();     // Tom is sterilized.
 // Luna.info();    // Luna has no owner.
 // Shadow.info();  // Shadow is sick with: flu.
+
+import { test, expect } from '@playwright/test';  // This should now work
+
+import { BasePage } from './BasePage';
+console.log(BasePage);
