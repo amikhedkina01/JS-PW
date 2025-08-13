@@ -1,20 +1,19 @@
-// import { BasePage } from './BasePage';
-// import { CONFIG } from '../config';
+// pages/ItemPage.js
+import { BasePage } from './BasePage.js';
+import { CONFIG } from '../utils/config.js';
 
-// export class ItemPage extends BasePage {
-//     constructor(page) {
-//         super(page);
-//         this.addToCartButton = page.locator(CONFIG.selectors.item.addToCartButton);
-//         this.cartBadge = page.locator(CONFIG.selectors.item.cartBadge);
-//     }
+export class ItemPage extends BasePage {
+    constructor(page) {
+        super(page);
+        this.productName = page.locator(CONFIG.selectors.item.productName);  // Використовуємо селектор з config.js
+        this.productDescription = page.locator(CONFIG.selectors.item.productDescription);  // Використовуємо селектор з config.js
+    }
 
-//     async addToCart() {
-//         await this.waitForElement(CONFIG.selectors.item.addToCartButton);
-//         await this.addToCartButton.click();
-//     }
+    async getProductName() {
+        return await this.productName.textContent();
+    }
 
-//     async getCartBadgeCount() {
-//         await this.waitForElement(CONFIG.selectors.item.cartBadge);
-//         return await this.cartBadge.textContent();
-//     }
-// }
+    async getProductDescription() {
+        return await this.productDescription.textContent();
+    }
+}

@@ -1,21 +1,21 @@
-import { BasePage } from './BasePage';
-import { CONFIG } from '../utils/config';
+// pages/ProductsPage.js
+import { BasePage } from './BasePage.js';  // Імпортуємо базову сторінку
 
-export class ProductsPage extends BasePage {
+export class ProductsPage extends BasePage {  // Експортуємо клас ProductsPage
     constructor(page) {
-        super(page);
-        this.pageTitle = page.locator(CONFIG.selectors.products.pageTitle);
-        this.productList = page.locator(CONFIG.selectors.products.productList);
-        this.menuButton = page.locator(CONFIG.selectors.products.menuButton);
+        super(page);  // Ініціалізуємо базовий клас
+        this.pageTitle = page.locator('.title');  // Локатор для заголовка
+        this.productList = page.locator('.inventory_list');  // Локатор для списку продуктів
+        this.addToCartButtons = page.locator('.btn_inventory');  // Локатор для кнопок додавання в кошик
     }
 
     async getPageTitle() {
-        await this.waitForElement(CONFIG.selectors.products.pageTitle);
-        return await this.pageTitle.textContent();
+        await this.waitForElement('.title');  // Чекаємо, поки заголовок стане видимим
+        return await this.pageTitle.textContent();  // Повертаємо текст заголовка
     }
 
-    async getProductCount() {
-        await this.waitForElement(CONFIG.selectors.products.productList);
-        return await this.productList.count();
+    async addProductToCart(index) {
+        const button = this.addToCartButtons.nth(index);  // Отримуємо кнопку для конкретного продукту
+        await button.click();  // Клікаємо на кнопку
     }
 }

@@ -1,25 +1,34 @@
 export const CONFIG = {
-    baseURL: 'https://www.saucedemo.com/',
+    baseURL: 'https://www.saucedemo.com',
     credentials: {
-        valid: { username: 'standard_user', password: 'secret_sauce' },
-        invalid: { username: 'invalid_user', password: 'secret_sauce' },
-        empty: { username: '', password: '' },
+        valid: {
+            username: 'standard_user',
+            password: 'secret_sauce',
+        },
+        invalid: {
+            username: 'invalid_user',
+            password: 'wrong_password',
+        }
     },
     selectors: {
-        login: {
-            username: '#user-name',
-            password: '#password',
+        loginPage: {
+            usernameField: '#user-name',
+            passwordField: '#password',
             loginButton: '#login-button',
             errorMessage: '[data-test="error"]',
         },
-        products: {
+        productsPage: {
             pageTitle: '.title',
             productList: '.inventory_list',
+            addToCartButtons: '.btn_inventory',
+            shoppingCartBadge: '.shopping_cart_badge',
+            shoppingCartLink: '.shopping_cart_link',
             menuButton: '#react-burger-menu-btn',
+            menuOptions: '.bm-item-list',
         },
-        item: {
-            addToCartButton: '.btn_inventory',
-            cartBadge: '.shopping_cart_badge',
-        },
-    },
+        itemPage: {
+            addToCartButton: '[data-test="add-to-cart-sauce-labs-backpack"]',
+            removeButton: '[data-test="remove-sauce-labs-backpack"]',
+        }
+    }
 };

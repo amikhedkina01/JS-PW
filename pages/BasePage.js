@@ -3,11 +3,7 @@ export class BasePage {
         this.page = page;
     }
 
-    // Common method to wait for an element
     async waitForElement(selector) {
         await this.page.waitForSelector(selector, { state: 'visible' });
     }
-
-    // Additional common methods can be added here (e.g., logging, screenshots)
-
 }

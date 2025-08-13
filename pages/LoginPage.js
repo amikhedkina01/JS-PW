@@ -1,9 +1,10 @@
-import { BasePage } from './BasePage';
-import { CONFIG } from '../utils/config';
+// pages/LoginPage.js
+import { BasePage } from './BasePage.js';
+import { CONFIG } from '../utils/config.js';
 
 export class LoginPage extends BasePage {
     constructor(page) {
-        super(page);  // Inherit methods from BasePage
+        super(page);
         this.usernameField = page.locator(CONFIG.selectors.login.username);
         this.passwordField = page.locator(CONFIG.selectors.login.password);
         this.loginButton = page.locator(CONFIG.selectors.login.loginButton);
@@ -11,7 +12,7 @@ export class LoginPage extends BasePage {
     }
 
     async login(username, password) {
-        await this.waitForElement(CONFIG.selectors.login.username); // Inherited method from BasePage
+        await this.waitForElement(CONFIG.selectors.login.username);
         await this.usernameField.fill(username);
         await this.passwordField.fill(password);
         await this.loginButton.click();

@@ -1,6 +1,7 @@
 {
   "name": "jsonemoretime",
   "version": "1.0.0",
+  "type": "module",
   "main": "index.js",
   "scripts": {},
   "keywords": [],
@@ -10,5 +11,8 @@
   "devDependencies": {
     "@playwright/test": "^1.54.2",
     "@types/node": "^24.1.0"
+  },
+  "dependencies": {
+    "playwright": "^1.54.2"
   }
 }
