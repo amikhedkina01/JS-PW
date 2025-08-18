@@ -1,14 +1,15 @@
-import { POManager } from '../pages/POManager.js';
+import { test as base, expect as baseExpect } from '@playwright/test';   //revrited fixture, added expect so it will be possible to use in tests expctations
+import { POManager } from '../pages/POManager';
 
-export const poManagerFixture = async ({ page }) => {
-    console.log('Starting POManager initialization...');
-    const poManager = new POManager(page);
+export const test = base.extend({
 
-    console.log('POManager initialized:');
+    // page: async ({ page }, use) => {
+    //     const po = new POManager(page);
+    //     await use(page);
+    // }
 
-    // Додаємо перевірку на доступність методів poManager
-    console.log('Checking POManager methods...');
-    if (!poManager.getLoginPage || !poManager.getProductsPage) {
-        throw new Error("Methods are missing in POManager.");
+    poManager: async ({ page }, use) => {
+        await use(new POManager(page));
     }
-};
+})
+export { baseExpect as expect };

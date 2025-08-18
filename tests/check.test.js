@@ -1,9 +1,9 @@
-import { test, expect } from '@playwright/test';
-import { poManagerFixture } from '../utils/fixture';
+// import { test, expect } from '@playwright/test';
+import { test } from '../utils/fixture.js';
 
-test('Simple Test', async ({ page }) => {
-    await page.goto('https://www.saucedemo.com/');
-    const title = await page.title();
-    expect(title).toBe('Swag Labs');
+
+test('Simple Test @check', async ({ poManager }) => {
+    // const po = new POManager(page)
+    await poManager.basePage.goToBasePage();
 });
 

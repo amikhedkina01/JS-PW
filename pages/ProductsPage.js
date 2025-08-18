@@ -1,21 +1,39 @@
-// pages/ProductsPage.js
-import { BasePage } from './BasePage.js';  // Імпортуємо базову сторінку
+import { BasePage } from './BasePage.js';
 
-export class ProductsPage extends BasePage {  // Експортуємо клас ProductsPage
+export class ProductsPage extends BasePage {
     constructor(page) {
-        super(page);  // Ініціалізуємо базовий клас
-        this.pageTitle = page.locator('.title');  // Локатор для заголовка
-        this.productList = page.locator('.inventory_list');  // Локатор для списку продуктів
-        this.addToCartButtons = page.locator('.btn_inventory');  // Локатор для кнопок додавання в кошик
+        super(page);
+        this.page = page;
+        this.pageTitle = page.getByText('Products'); // заголовок
+        this.productList = page.locator('.inventory_list'); // список товарів
+        this.productNames = page.locator('.inventory_item_name');
+        this.productPrices = page.locator('.inventory_item_price');
+        this.menuButton = page.locator('#react-burger-menu-btn'); // кнопка меню
+        this.menuItems = page.locator('.bm-item-list a'); // пункти меню
+        this.priceFilter = page.locator('.product_sort_container'); // селектор сортування
     }
 
-    async getPageTitle() {
-        await this.waitForElement('.title');  // Чекаємо, поки заголовок стане видимим
-        return await this.pageTitle.textContent();  // Повертаємо текст заголовка
+    async getProductNames() {
+        return await this.productNames.allTextContents();
     }
 
-    async addProductToCart(index) {
-        const button = this.addToCartButtons.nth(index);  // Отримуємо кнопку для конкретного продукту
-        await button.click();  // Клікаємо на кнопку
+    async getProductPrices() {
+        return await this.productPrices.allTextContents();
+    }
+
+    async sortProductsLowToHigh() {
+        await this.priceFilter.selectOption({ label: 'Price (low to high)' });
+    }
+
+    async sortProductsHighToLow() {
+        await this.priceFilter.selectOption({ label: 'Price (high to low)' });
+    }
+
+    async openMenu() {
+        await this.menuButton.click();
+    }
+
+    async getMenuItems() {
+        return await this.menuItems.allTextContents();
     }
 }

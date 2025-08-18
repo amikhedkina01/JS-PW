@@ -6,4 +6,8 @@ export class BasePage {
     async waitForElement(selector) {
         await this.page.waitForSelector(selector, { state: 'visible' });
     }
+
+    async goToBasePage() {
+        await this.page.goto('https://www.saucedemo.com/');
+    }
 }

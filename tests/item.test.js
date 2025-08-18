@@ -1,48 +1,39 @@
-import { test, expect } from '@playwright/test';
-import { CONFIG } from '../utils/config.js';
+import { test, expect } from '../utils/fixture.js';
 
 test.describe('Item Page Tests', () => {
-    test.beforeEach(async ({ page }) => {
-        await page.goto(CONFIG.baseURL);
-        const usernameField = page.locator(CONFIG.selectors.loginPage.usernameField);
-        const passwordField = page.locator(CONFIG.selectors.loginPage.passwordField);
-        const loginButton = page.locator(CONFIG.selectors.loginPage.loginButton);
 
-        await usernameField.fill(CONFIG.credentials.valid.username);
-        await passwordField.fill(CONFIG.credentials.valid.password);
-        await loginButton.click();
+    test.beforeEach(async ({ poManager }) => {
+        await poManager.basePage.goToBasePage();
+        await poManager.loginPage.login('standard_user', 'secret_sauce');
     });
 
-    test('Add item to cart', async ({ page }) => {
-        const addToCartButton = page.locator(CONFIG.selectors.itemPage.addToCartButton);
-        await addToCartButton.click();
+    test('@smoke Add item to cart', async ({ poManager }) => {
+        const itemName = 'sauce-labs-backpack';                        // hardcoded for now
+        await poManager.itemPage.addItemToCart(itemName);
 
-        const cartItemCount = page.locator(CONFIG.selectors.productsPage.shoppingCartBadge);
-        const cartItemCountText = await cartItemCount.textContent();
-        expect(cartItemCountText).toBe('1');
+        const cartCount = await poManager.itemPage.getCartItemCount();
+        expect(cartCount).toBe(1);
     });
 
-    test('Remove item from cart', async ({ page }) => {
-        const addToCartButton = page.locator(CONFIG.selectors.itemPage.addToCartButton);
-        await addToCartButton.click();
+    test('@smoke Remove item from cart', async ({ poManager }) => {
+        const itemName = 'sauce-labs-backpack';                          // hardcoded for now
+        await poManager.itemPage.addItemToCart(itemName);
 
-        const cartItemCount = page.locator(CONFIG.selectors.productsPage.shoppingCartBadge);
-        const cartItemCountText = await cartItemCount.textContent();
-        expect(cartItemCountText).toBe('1');
+        let cartCount = await poManager.itemPage.getCartItemCount();
+        expect(cartCount).toBe(1);
 
-        const removeButton = page.locator(CONFIG.selectors.itemPage.removeButton);
-        await removeButton.click();
-
-        const cartItemCountAfterRemoval = await page.locator(CONFIG.selectors.productsPage.shoppingCartBadge).count();
-        expect(cartItemCountAfterRemoval).toBe(0);
+        await poManager.itemPage.removeItemFromCart(itemName);
+        cartCount = await poManager.itemPage.getCartItemCount();
+        expect(cartCount).toBe(0);
     });
 
-    test('Navigate to cart', async ({ page }) => {
-        const cartIcon = page.locator(CONFIG.selectors.productsPage.shoppingCartLink);
-        await cartIcon.click();
+    test('@smoke Navigate to cart', async ({ poManager }) => {
+        await poManager.itemPage.goToCart();
 
-        const pageTitle = page.locator(CONFIG.selectors.productsPage.pageTitle);
-        const pageTitleText = await pageTitle.textContent();
-        expect(pageTitleText).toBe('Your Cart');
+        const pageTitle = poManager.productsPage.page.locator('span.title');
+        await expect(pageTitle).toHaveText('Your Cart');
     });
 });
+
+
+

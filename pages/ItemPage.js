@@ -1,19 +1,27 @@
-// pages/ItemPage.js
-import { BasePage } from './BasePage.js';
-import { CONFIG } from '../utils/config.js';
-
-export class ItemPage extends BasePage {
+export class ItemPage {
     constructor(page) {
-        super(page);
-        this.productName = page.locator(CONFIG.selectors.item.productName);  // Використовуємо селектор з config.js
-        this.productDescription = page.locator(CONFIG.selectors.item.productDescription);  // Використовуємо селектор з config.js
+        this.page = page;
+        this.addToCartButton = (itemName) => page.locator(`[data-test="add-to-cart-${itemName}"]`);
+        this.removeButton = (itemName) => page.locator(`[data-test="remove-${itemName}"]`);
+        this.shoppingCartBadge = page.locator('.shopping_cart_badge');
+        this.cartLink = page.locator('.shopping_cart_link');
     }
 
-    async getProductName() {
-        return await this.productName.textContent();
+    async addItemToCart(itemName) {
+        await this.addToCartButton(itemName).click();
     }
 
-    async getProductDescription() {
-        return await this.productDescription.textContent();
+    async removeItemFromCart(itemName) {
+        await this.removeButton(itemName).click();
+    }
+
+    async getCartItemCount() {
+        const count = await this.shoppingCartBadge.count();
+        if (count === 0) return 0;
+        return parseInt(await this.shoppingCartBadge.textContent());
+    }
+
+    async goToCart() {
+        await this.cartLink.click();
     }
 }
