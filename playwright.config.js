@@ -1,19 +1,29 @@
-import { defineConfig } from '@playwright/test';
-import allureReporter from 'allure-playwright';
+import { defineConfig, devices } from '@playwright/test';
+import * as allure from 'allure-js-commons';
+import { envConfig, testEnv } from './utils/env.js';
 
-export default defineConfig({
-  testDir: './tests',  // Вказуємо директорію з тестами
-  fullyParallel: true,  // Запуск тестів в паралельному режимі
-  forbidOnly: !!process.env.CI,  // Забороняє використання test.only в коді на CI
-  retries: process.env.CI ? 2 : 0,  // Повторення тестів тільки на CI
-  workers: process.env.CI ? 1 : undefined,  // Лише один процес тестів на CI
-  reporter: [
-    ['list'],
-    ['allure-playwright']
-  ],
-  use: {
-    trace: 'on-first-retry',  // Збираємо трасування на перших повторних спробах
-    screenshot: 'only-on-failure',  // Зберігаємо скріншоти лише на невдачі тесту
-    video: 'on-first-retry',  // Записуємо відео при першому повторі тесту
-  },
-});
+export default defineConfig(
+  {
+    testDir: './tests',
+    fullyParallel: true,
+    retries: process.env.CI ? 2 : 0,
+    reporter: [
+      ['list'],
+      ['allure-playwright']
+    ],
+    use: {
+      baseURL: envConfig.baseURL, // <- береться з обраного env
+      testIdAttribute: 'data-test',
+      trace: 'on-first-retry',  // Збираємо трасування на перших повторних спробах
+      screenshot: 'only-on-failure',  // Зберігаємо скріншоти лише на невдачі тесту
+      video: 'on-first-retry',  // Записуємо відео при першому повторі тесту
+    },
+    // projects: [
+    //   { name: `chromium-${envName}`, use: { ...devices['Desktop Chrome'] } },
+    //   // { name: `firefox-${envName}`, use: { ...devices['Desktop Firefox'] } },
+    // ],
+    metadata: { env: testEnv },
+  });
+
+
+

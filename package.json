@@ -4,15 +4,29 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "test": "npx playwright test",
-    "test:all": "npx playwright test",
+    "test": "npx playwright test --headed",
     "test:smoke": "npx playwright test --grep @smoke",
     "test:regression": "npx playwright test --grep @regression",
     "test:debug": "npx playwright test --headed --debug",
     "test:report": "npx playwright show-report",
-    "test:allure": "npx playwright test --reporter=list,allure-playwright",
-    "allure:generate": "allure generate allure-results --clean -o allure-report",
-    "allure:open": "allure open allure-report"
+    "allure:clean": "rimraf allure-results",
+    "allure:reset": "rimraf allure-results allure-report",
+    "allure:gen": "npx allure generate allure-results --clean -o allure-report",
+    "allure:open": "npx allure open allure-report",
+    "allure:serve": "npx allure serve allure-results",
+    "allure:keep-history": "node -e \"const fs=require('fs'); if(fs.existsSync('allure-report/history')){ fs.mkdirSync('allure-results',{recursive:true}); fs.cpSync('allure-report/history','allure-results/history',{recursive:true}); }\"",
+    "allure:gen:safe": "node -e \"const fs=require('fs');const p='allure-results';if(!fs.existsSync(p)||fs.readdirSync(p).length===0){console.log('[allure] no results, skipping generate');process.exit(0)}\" && npx allure generate allure-results --clean -o allure-report",
+    "allure:open:safe": "node -e \"const fs=require('fs');if(!fs.existsSync('allure-report')){console.log('[allure] no report to open, skipping');process.exit(0)}\" && npx allure open allure-report",
+    "test:dev": "cross-env TEST_ENV=dev playwright test",
+    "test:stage": "cross-env TEST_ENV=stage playwright test",
+    "test:prod": "cross-env TEST_ENV=prod playwright test",
+    "report:dev": "npm run allure:reset && (npm run test:dev   || true) && npm run allure:gen:safe && npm run allure:open:safe",
+    "report:stage": "npm run allure:reset && (npm run test:stage || true) && npm run allure:gen:safe && npm run allure:open:safe",
+    "report:prod": "npm run allure:reset && (npm run test:prod || true) && npm run allure:gen:safe && npm run allure:open:safe",
+    "report:dev:history": "npm run allure:clean && npm run test:dev && npm run allure:keep-history && npm run allure:gen && npm run allure:open",
+    "report:stage:history": "npm run allure:clean && npm run test:stage && npm run allure:keep-history && npm run allure:gen && npm run allure:open",
+    "report:prod:history": "npm run allure:clean && npm run test:prod && npm run allure:keep-history && npm run allure:gen && npm run allure:open",
+    "report:prod:keep-exit": "npm run allure:reset && (npm run test:prod; code=$?; npm run allure:gen:safe; npm run allure:open:safe; exit $code)"
   },
   "keywords": [],
   "author": "",
@@ -22,7 +36,10 @@
     "@playwright/test": "^1.55.0",
     "@types/node": "^24.1.0",
     "allure-commandline": "^2.34.1",
-    "allure-playwright": "^3.3.3"
+    "allure-playwright": "^3.4.1",
+    "cross-env": "^10.0.0",
+    "dotenv": "^17.2.2",
+    "rimraf": "^6.0.1"
   },
   "dependencies": {
     "playwright": "^1.54.2"

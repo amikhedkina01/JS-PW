@@ -1,39 +1,98 @@
 import { test, expect } from '../utils/fixture.js';
+import * as allure from 'allure-playwright';
 
-test.describe('Item Page Tests', () => {
 
-    test.beforeEach(async ({ poManager }) => {
+test.describe('Item Tests', () => {
+    let itemPage;
+    let auth, items;
+
+    test.beforeEach(async ({ poManager, envData }, testInfo) => {
+        ({ auth, items } = envData);
+
         await poManager.basePage.goToBasePage();
-        await poManager.loginPage.login('standard_user', 'secret_sauce');
+        await poManager.loginPage.login(auth.username, auth.password);
+        itemPage = poManager.itemPage
+        // Парсимо @tags з назви тесту і додаємо в Allure
+        const tags = testInfo.title.match(/@\w+/g) ?? [];
+        tags.forEach(t => allure.tag(t.slice(1))); // -> smoke, regression, etc
+
     });
 
-    test('@smoke Add item to cart', async ({ poManager }) => {
-        const itemName = 'sauce-labs-backpack';                        // hardcoded for now
-        await poManager.itemPage.addItemToCart(itemName);
+    test('UI: Verify preview Item elements are correct', { tag: '@smoke' }, async ({ }) => {
 
-        const cartCount = await poManager.itemPage.getCartItemCount();
-        expect(cartCount).toBe(1);
+        await test.step('Key elements check', async () => {
+
+            await itemPage.verifyItemElements(items.backpack);
+
+        });
     });
 
-    test('@smoke Remove item from cart', async ({ poManager }) => {
-        const itemName = 'sauce-labs-backpack';                          // hardcoded for now
-        await poManager.itemPage.addItemToCart(itemName);
 
-        let cartCount = await poManager.itemPage.getCartItemCount();
-        expect(cartCount).toBe(1);
+    test('Add item to cart', { tag: '@smoke' }, async ({ }) => {
 
-        await poManager.itemPage.removeItemFromCart(itemName);
-        cartCount = await poManager.itemPage.getCartItemCount();
-        expect(cartCount).toBe(0);
+        await test.step('Attempt to add item to a cart', async () => {
+
+            await itemPage.verifyAddItemToCart(items.backpack);
+        });
+
     });
 
-    test('@smoke Navigate to cart', async ({ poManager }) => {
-        await poManager.itemPage.goToCart();
+    test('Remove item from cart', { tag: '@smoke' }, async () => {
 
-        const pageTitle = poManager.productsPage.page.locator('span.title');
-        await expect(pageTitle).toHaveText('Your Cart');
+        await test.step('Precondition. Attempt to add item to a cart', async () => {
+            await itemPage.verifyAddItemToCart(items.backpack);
+        });
+        const item = items.backpack;
+
+        await test.step('Attempt to remove item to a cart', async () => {
+            await itemPage.verifyRemoveItemFromCart(item)
+        });
+
+    });
+
+    test('Navigate to cart from Item page', { tag: '@regression' }, async () => {
+
+        await test.step('Attempt to open cart', async () => {
+            await itemPage.verifyCartIconWork();
+        });
+    });
+
+    test('UI smoke: Verify Item elements are correct', { tag: '@smoke' }, async () => {
+
+        await test.step('Attempt to open Item page', async () => {
+            await itemPage.verifyItemPageOpened(items.backpack);
+        });
+
+        await test.step('Verify Item elements are correct', async () => {
+
+            await itemPage.verifyItemElementsPage(items.backpack);
+
+        });
+
+    });
+
+    test('Add item to cart from Item Page', { tag: '@smoke' }, async () => {
+
+        await test.step('Attempt to add to cart', async () => {
+
+            await itemPage.verifyAddToCartFromItemPage(items.backpack);
+        });
+    });
+
+    test('Remove item from cart with Item Page', { tag: '@smoke' }, async () => {
+
+
+        await test.step('Precondition. Attempt to add item to a cart', async () => {
+            await itemPage.verifyItemPageOpened(items.backpack);
+
+            await itemPage.verifyAddToCartFromItemPage(items.backpack);
+        });
+
+        await test.step('Attempt to remove item to a cart', async () => {
+            await itemPage.verifyRemoveFromCartItemPage(items.backpack);
+        });
+
     });
 });
-
 
 

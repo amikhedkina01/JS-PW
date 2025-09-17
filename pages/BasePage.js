@@ -8,6 +8,8 @@ export class BasePage {
     }
 
     async goToBasePage() {
-        await this.page.goto('https://www.saucedemo.com/');
+        await this.page.goto('/');
+
+        // await this.page.goto('https://www.saucedemo.com/');
     }
 }

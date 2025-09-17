@@ -1,16 +1,29 @@
-import { test as base, expect as baseExpect } from '@playwright/test';   //revrited fixture, added expect so it will be possible to use in tests expctations 
-import { POManager } from '../pages/POManager';
-
+import { test as base, expect as baseExpect } from '@playwright/test';
+import { POManager } from '../pages/POManager.js';
+import { envConfig, negativeCases, expectedErrors } from './env.js';
 
 export const test = base.extend({
-
     // page: async ({ page }, use) => {
     //     const po = new POManager(page);
     //     await use(page);
     // }
-
     poManager: async ({ page }, use) => {
         await use(new POManager(page));
-    }
-})
+    },
+
+    // НОВА фікстура з даними вибраного енва
+    envData: async ({ }, use) => {
+        await use({
+            auth: envConfig.auth,
+            items: envConfig.items,
+            featureFlags: envConfig.featureFlags ?? {},
+            negativeCases,
+            expectedErrors,
+            raw: envConfig, // весь об’єкт, якщо знадобиться
+        });
+    },
+});
+
 export { baseExpect as expect };
+
+
