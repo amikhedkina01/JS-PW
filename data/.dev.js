@@ -16,11 +16,31 @@ export default {
             priceText: '$29.99',
             itemLink: 'item-4-title-link'
         },
-        // bikeLight: 'sauce-labs-bike-light',
-        // boltTShirt: 'sauce-labs-bolt-t-shirt',
-        // fleeceJacket: 'sauce-labs-fleece-jacket',
-        // onesie: 'sauce-labs-onesie',
-        // redTShirt: 'test.allthethings()-t-shirt-(red)',
+        bikeLight: {
+            slug: 'sauce-labs-bike-light',
+            id: 0,
+            title: 'Sauce Labs Bike Light',
+            descContains: `A red light isn't the desired state in testing but it sure helps when riding your bike at night.`,
+            priceText: '$9.99',
+            itemLink: 'item-0-title-link'
+        },
+        boltTShirt: {
+            slug: 'sauce-labs-bolt-t-shirt',
+            id: 1,
+            title: 'Sauce Labs Bolt T-Shirt',
+            descContains: `Get your testing superhero on with the Sauce Labs bolt T-shirt.`,
+            priceText: '$15.99',
+            itemLink: 'item_1_title_link'
+        },
+        fleeceJacket: {
+            slug: 'sauce-labs-fleece-jacket',
+            id: 5,
+            title: 'Sauce Labs Fleece Jacket',
+            descContains: `It's not every day that you come across a midweight quarter-zip fleece jacket`,
+            priceText: '$49.99',
+            itemLink: 'item_5_title_link'
+        }
+
     },
 };
 

@@ -1,5 +1,7 @@
 import { test, expect } from '../utils/fixture.js';
 import * as allure from 'allure-playwright';
+import { tags } from '../data/tags.js';
+
 
 
 test.describe('Item Tests', () => {
@@ -18,7 +20,7 @@ test.describe('Item Tests', () => {
 
     });
 
-    test('UI: Verify preview Item elements are correct', { tag: '@smoke' }, async ({ }) => {
+    test('UI: Verify preview Item elements are correct', { tags: [tags.smoke] }, async ({ }) => {
 
         await test.step('Key elements check', async () => {
 
@@ -28,7 +30,7 @@ test.describe('Item Tests', () => {
     });
 
 
-    test('Add item to cart', { tag: '@smoke' }, async ({ }) => {
+    test('Add item to cart', { tags: [tags.smoke] }, async ({ }) => {
 
         await test.step('Attempt to add item to a cart', async () => {
 
@@ -37,7 +39,7 @@ test.describe('Item Tests', () => {
 
     });
 
-    test('Remove item from cart', { tag: '@smoke' }, async () => {
+    test('Remove item from cart', { tags: [tags.smoke] }, async () => {
 
         await test.step('Precondition. Attempt to add item to a cart', async () => {
             await itemPage.verifyAddItemToCart(items.backpack);
@@ -50,14 +52,14 @@ test.describe('Item Tests', () => {
 
     });
 
-    test('Navigate to cart from Item page', { tag: '@regression' }, async () => {
+    test('Navigate to cart from Item page', { tags: [tags.regression] }, async () => {
 
         await test.step('Attempt to open cart', async () => {
             await itemPage.verifyCartIconWork();
         });
     });
 
-    test('UI smoke: Verify Item elements are correct', { tag: '@smoke' }, async () => {
+    test('UI smoke: Verify Item elements are correct', { tags: [tags.smoke] }, async () => {
 
         await test.step('Attempt to open Item page', async () => {
             await itemPage.verifyItemPageOpened(items.backpack);
@@ -71,7 +73,7 @@ test.describe('Item Tests', () => {
 
     });
 
-    test('Add item to cart from Item Page', { tag: '@smoke' }, async () => {
+    test('Add item to cart from Item Page', { tags: [tags.smoke] }, async () => {
 
         await test.step('Attempt to add to cart', async () => {
 
@@ -79,7 +81,7 @@ test.describe('Item Tests', () => {
         });
     });
 
-    test('Remove item from cart with Item Page', { tag: '@smoke' }, async () => {
+    test('Remove item from cart with Item Page', { tags: [tags.smoke] }, async () => {
 
 
         await test.step('Precondition. Attempt to add item to a cart', async () => {

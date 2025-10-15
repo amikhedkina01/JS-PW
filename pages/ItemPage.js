@@ -1,108 +1,3 @@
-// import { expect } from '../utils/fixture.js';
-// import { BasePage } from './BasePage.js';
-
-
-// export class ItemPage extends BasePage {
-//     constructor(page) {
-//         super(page);
-//         this.page = page;
-
-//         this.addToCartButton = (name) => page.getByTestId(`add-to-cart-${name}`);
-//         this.removeButton = (name) => page.getByTestId(`remove-${name}`);
-
-//         this.shoppingCartBadge = page.getByTestId('shopping-cart-badge');
-//         this.cartLink = page.getByTestId('shopping-cart-link');
-
-//         //UI
-//         this.itemImg = page.getByAltText('Sauce Labs Backpack')
-//         this.itemDescription = page.getByText('carry.allTheThings() with the')
-//         this.itemTitle = page.getByTestId('item-4-title-link')
-//         this.itemPrice = page.getByText('$29.99Add to cart')
-//         this.addToCartItem = page.getByTestId('add-to-cart-sauce-labs-backpack')
-//         this.item = page.getByTestId('inventory-list').filter({ hasText: 'Sauce Labs Backpackcarry.' }).nth(1)
-
-//         //cart
-//         this.pageTitle = page.getByTestId('title');
-
-//         //Item UI
-//         this.pageItemtitle = page.getByTestId('inventory-item-name');
-//         this.pageItemDecr = page.getByTestId('inventory-item-desc');
-//         this.pageItemPrice = page.getByTestId('inventory-item-price');
-//         this.pageItemAddToCart = page.getByTestId('add-to-cart');
-//         this.pageItemImg = page.getByTestId('item-sauce-labs-backpack-img');
-//         this.pageItemRemove = page.getByTestId('remove')
-
-//         this.itemPageBackToProducts = page.getByRole('button', { name: 'Back to products' });
-
-//     }
-
-//     async verifyItemElements() {
-//         await expect(this.itemTitle).toBeVisible();
-//         await expect(this.itemDescription).toBeVisible();
-//         await expect(this.itemImg).toBeVisible();
-//         await expect(this.itemPrice).toBeVisible();
-//         await expect(this.addToCartItem).toBeVisible();
-//     }
-
-//     async verifyAddItemToCart(itemName = 'sauce-labs-backpack') {
-//         await this.addToCartButton(itemName).click();
-
-//         const cartCount = await this.getCartItemCount();
-//         expect(cartCount).toBe(1);
-//     }
-
-//     async verifyRemoveItemFromCart(itemName = 'sauce-labs-backpack') { // прибрати хардкод
-
-//         await expect(this.removeButton(itemName)).toBeVisible();
-//         await this.removeButton(itemName).click();
-//         await expect(this.addToCartButton(itemName)).toBeVisible();
-//         const cartCount = await this.getCartItemCount();
-//         expect(cartCount).toBe(0); // якщо перед цим додавали рівно 1 товар
-
-//         // задана умова - 0, перевірити що прибраний самий айтемб 
-//         // переіменувати метод або розбити на 2: removeItemFromTheCart and VerifyItemWasRemoved
-//     }
-
-//     async getCartItemCount() {
-//         const countBadges = await this.shoppingCartBadge.count();
-//         if (countBadges === 0) return 0;
-//         const text = await this.shoppingCartBadge.textContent();
-//         return parseInt(text, 10);
-//     }
-
-//     async verifyCartIconWork() {
-//         await this.cartLink.click();
-//         await expect(this.pageTitle).toHaveText('Your Cart');
-//     }
-
-//     async verifyItemPageOpened() {
-//         await this.itemTitle.click();
-//         await expect(this.page).toHaveURL(/inventory-item.html\?id=\d+/);
-//     }
-
-//     async verifyItemElementsPage() {
-//         await expect(this.pageItemtitle).toBeVisible();
-//         await expect(this.pageItemDecr).toBeVisible();
-//         await expect(this.pageItemPrice).toBeVisible();
-//         await expect(this.pageItemAddToCart).toBeVisible();
-//         await expect(this.pageItemImg).toBeVisible();
-//         await expect(this.itemPageBackToProducts).toBeVisible();
-//     }
-
-//     async verifyAddToCartFromItemPage() {
-//         await this.page.goto('https://www.saucedemo.com/inventory-item.html?id=4')
-//         await this.pageItemAddToCart.click()
-//         const cartCount = await this.getCartItemCount();
-//         expect(cartCount).toBe(1);
-//     }
-
-//     async verifyRemoveFromCartItemPage() {
-//         await this.pageItemRemove.click();
-//         await expect(this.pageItemAddToCart).toBeVisible();
-//         const cartCount = await this.getCartItemCount();
-//         expect(cartCount).toBe(0); // якщо перед цим додавали рівно 1 товар
-//     }
-// }
 
 import { expect } from '../utils/fixture.js';
 import { BasePage } from './BasePage.js';
@@ -129,16 +24,16 @@ export class ItemPage extends BasePage {
 
 
     // ---- допоміжні: дефолти + нормалізація параметра товару ----
-    getDefaultItem() {
-        // дефолт з вашого .dev.js (backward-compat, якщо метод викликали без аргументів)
-        return {
-            slug: 'sauce-labs-backpack',
-            id: 4,
-            title: 'Sauce Labs Backpack',
-            descContains: 'carry.allTheThings() with the',
-            priceText: '$29.99',
-        };
-    }
+    // getDefaultItem() {
+    //     // дефолт з вашого .dev.js (backward-compat, якщо метод викликали без аргументів)
+    //     return {
+    //         slug: 'sauce-labs-backpack',
+    //         id: 4,
+    //         title: 'Sauce Labs Backpack',
+    //         descContains: 'carry.allTheThings() with the',
+    //         priceText: '$29.99',
+    //     };
+    // }
 
     normalizeItem(item) {
         if (typeof item === 'string') return { slug: item };      // дозволяємо передати тільки slug

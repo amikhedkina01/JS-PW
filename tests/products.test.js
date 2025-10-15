@@ -1,5 +1,7 @@
 import { test, expect } from '../utils/fixture.js';
 import * as allure from 'allure-playwright';
+import { tags } from '../data/tags.js';
+
 
 test.describe('Product Page Tests', () => {
     let productsPage
@@ -19,7 +21,7 @@ test.describe('Product Page Tests', () => {
 
     });
 
-    test('UI: check page elements on Products page', { tag: '@smoke' }, async () => {
+    test('UI: check page elements on Products page', { tags: [tags.smoke] }, async () => {
 
         await test.step('Title & header controls are visible', async () => {
             await productsPage.headerCheck();
@@ -34,7 +36,7 @@ test.describe('Product Page Tests', () => {
         });
     });
 
-    test('Filter products by price', { tag: '@smoke' }, async () => {
+    test('Filter products by price', { tags: [tags.smoke] }, async () => {
 
         await test.step('Filtering. Low to High', async () => {
             await productsPage.verifyLowToHighFilter()

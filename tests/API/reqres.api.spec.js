@@ -7,26 +7,24 @@ import {
     getToken,
     clearToken,
     sleep,
-} from '../utils/APIUtils.js';
+    expectStatus,
+} from '../../utils/APIUtils.js';
+import { tags } from '../../data/tags.js';
+
 
 test.describe('Reqres API smoke (independent tests, helpers via utils)', () => {
-    // Один раз логінимося перед сьютом і тримаємо токен у сторі утиліти.
+
     test.beforeAll(async () => {
         clearToken();
-        await loginAndStoreToken({
-            email: 'eve.holt@reqres.in',
-            password: 'cityslicka',
-        });
-        // Не обовʼязково для reqres, але показуємо сценарій із bearer.
+        await loginAndStoreToken({ email: 'eve.holt@reqres.in', password: 'cityslicka' });
         expect(getToken()).toBeTruthy();
+
     });
 
-    test('POST /api/register — successful registration returns id & token', async () => {
-        const api = await createApi(); // без auth
-        const payload = { email: 'eve.holt@reqres.in', password: 'pistol' };
-
-        const res = await api.post('/api/register', { data: payload });
-        await expect(res).toHaveStatus(200);
+    test('POST /api/register — successful registration returns id & token', { tags: [tags.API] }, async () => {
+        const api = await createApi(); // no auth required
+        const res = await api.post('/api/register', { data: { email: 'eve.holt@reqres.in', password: 'pistol' } });
+        expectStatus(res, 200);
 
         await expectJson(res, (json) => {
             expect(json).toHaveProperty('id');
@@ -35,12 +33,10 @@ test.describe('Reqres API smoke (independent tests, helpers via utils)', () => {
             expect(typeof json.token).toBe('string');
             expect(json.token.length).toBeGreaterThan(0);
         });
-
         await api.dispose();
     });
 
-    test('POST /api/login — successful login stores token', async () => {
-        // показово робимо ще один логін і перекриваємо токен
+    test('POST /api/login — successful login stores token', { tags: [tags.API] }, async () => {
         const api = await createApi();
         const resToken = await loginAndStoreToken(
             { email: 'eve.holt@reqres.in', password: 'cityslicka' },
@@ -50,10 +46,10 @@ test.describe('Reqres API smoke (independent tests, helpers via utils)', () => {
         await api.dispose();
     });
 
-    test('GET /api/users/2 — returns expected user shape (with auth header applied)', async () => {
-        const api = await createApi({ auth: true }); // якщо токен є — піде як Bearer
+    test('GET /api/users/2 — returns expected user shape (with auth header applied)', { tags: [tags.API] }, async () => {
+        const api = await createApi({ auth: true });
         const res = await api.get('/api/users/2');
-        await expect(res).toHaveStatus(200);
+        expectStatus(res, 200);
 
         await expectJson(res, (json) => {
             expect(json).toHaveProperty('data');
@@ -67,40 +63,34 @@ test.describe('Reqres API smoke (independent tests, helpers via utils)', () => {
             });
             expect(u.email).toContain('@');
         });
-
         await api.dispose();
     });
 
-    test('PATCH /api/users/2 — partial update echoes fields & updates timestamp', async () => {
+    test('PATCH /api/users/2 — partial update echoes fields & timestamp', { tags: [tags.API] }, async () => {
         const api = await createApi({ auth: true });
-        const update = { job: 'Senior QA', cat_pref: 'likes tuna' };
-
-        const res = await api.patch('/api/users/2', { data: update });
-        await expect(res).toHaveStatus(200);
+        const res = await api.patch('/api/users/2', { data: { job: 'Senior QA', cat_pref: 'likes tuna' } });
+        expectStatus(res, 200);
 
         const body = await expectJson(res, (json) => {
-            expect(json).toHaveProperty('job', update.job);
-            expect(json).toHaveProperty('cat_pref', update.cat_pref);
+            expect(json).toHaveProperty('job', 'Senior QA');
+            expect(json).toHaveProperty('cat_pref', 'likes tuna');
             expect(json).toHaveProperty('updatedAt');
             expect(typeof json.updatedAt).toBe('string');
         });
         expect(() => new Date(body.updatedAt).toISOString()).not.toThrow();
-
         await api.dispose();
     });
 
-    test('DELETE /api/users/2 — returns 204 and empty body', async () => {
+    test('DELETE /api/users/2 — returns 204 and empty body', { tags: [tags.API] }, async () => {
         const api = await createApi({ auth: true });
 
         const res = await api.delete('/api/users/2');
-        await expect(res).toHaveStatus(204);
-        const text = await res.text();
-        expect(text).toBe('');
+        expectStatus(res, 204);
+        expect(await res.text()).toBe('');
 
         await sleep(100);
         const res2 = await api.delete('/api/users/2');
-        await expect(res2).toHaveStatus(204);
-
+        expectStatus(res2, 204);
         await api.dispose();
     });
 });

@@ -2,6 +2,7 @@ import { test, expect } from '../utils/fixture.js';
 import * as allure from 'allure-playwright';
 import { loadEnvData } from '../utils/env.js';
 const { negativeCases, expectedErrors } = await loadEnvData();
+import { tags } from '../data/tags.js';
 
 
 
@@ -16,7 +17,7 @@ test.describe('Login Tests', () => {
         tags.forEach(t => allure.tag(t.slice(1))); // -> smoke, regression, etc
     });
 
-    test('UI smoke: login form is correct', { tag: ['@smoke', '@regression'] }, async () => {
+    test('UI smoke: login form is correct', { tags: [tags.smoke] }, async () => {
 
         await test.step('Key elements check', async () => {
             await loginPage.verifyLoginPageElements();
@@ -24,7 +25,7 @@ test.describe('Login Tests', () => {
     });
 
     // positive
-    test('Successful login', { tag: '@smoke' }, async ({ envData }) => {
+    test('Successful login', { tags: [tags.smoke] }, async ({ envData }) => {
         const { username, password } = envData.auth;
 
         await test.step('login with standart user', async () => {
@@ -37,7 +38,7 @@ test.describe('Login Tests', () => {
     });
 
     for (const tc of negativeCases) {
-        test(`Negative: ${tc.name}`, { tag: '@regression' }, async () => {
+        test(`Negative: ${tc.name}`, { tags: [tags.regression] }, async () => {
 
             await test.step('Attempt to login with invalid creds', async () => {
                 await loginPage.login(tc.username, tc.password);

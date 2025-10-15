@@ -3,7 +3,7 @@ import 'dotenv/config'; // npm i dotenv
 const testEnv = (process.env.TEST_ENV || 'dev').toLowerCase();
 
 const loaders = {
-    dev: () => import('../data/.dev.js'),
+    dev: () => import('../data/.dev.js'), // передававти файл
     stage: () => import('../data/.stage.js'),
     prod: () => import('../data/.prod.js'),
 };
