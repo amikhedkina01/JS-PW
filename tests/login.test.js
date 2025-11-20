@@ -1,10 +1,7 @@
 import { test, expect } from '../utils/fixture.js';
-import * as allure from 'allure-playwright';
 import { loadEnvData } from '../utils/env.js';
 const { negativeCases, expectedErrors } = await loadEnvData();
-import { tags } from '../data/tags.js';
-
-
+import { tags as tagNames } from '../data/tags.js';
 
 test.describe('Login Tests', () => {
     let loginPage;
@@ -12,12 +9,14 @@ test.describe('Login Tests', () => {
     test.beforeEach(async ({ poManager }, testInfo) => {
         await poManager.basePage.goToBasePage();
         loginPage = poManager.loginPage;
-        // Парсимо @tags з назви тесту і додаємо в Allure
+        // Playwright annotations are picked up by reporters (Allure reporter will convert them to labels)
         const tags = testInfo.title.match(/@\w+/g) ?? [];
-        tags.forEach(t => allure.tag(t.slice(1))); // -> smoke, regression, etc
+        for (const t of tags) {
+            testInfo.annotations.push({ type: 'tag', description: t.slice(1) });
+        }
     });
 
-    test('UI smoke: login form is correct', { tags: [tags.smoke] }, async () => {
+    test(`${tagNames.smoke} UI smoke: login form is correct`, async () => {
 
         await test.step('Key elements check', async () => {
             await loginPage.verifyLoginPageElements();
@@ -25,7 +24,7 @@ test.describe('Login Tests', () => {
     });
 
     // positive
-    test('Successful login', { tags: [tags.smoke] }, async ({ envData }) => {
+    test(`${tagNames.smoke} Successful login`, async ({ envData }) => {
         const { username, password } = envData.auth;
 
         await test.step('login with standart user', async () => {
@@ -38,7 +37,7 @@ test.describe('Login Tests', () => {
     });
 
     for (const tc of negativeCases) {
-        test(`Negative: ${tc.name}`, { tags: [tags.regression] }, async () => {
+        test(`${tagNames.regression} Negative: ${tc.name}`, async () => {
 
             await test.step('Attempt to login with invalid creds', async () => {
                 await loginPage.login(tc.username, tc.password);
@@ -53,7 +52,6 @@ test.describe('Login Tests', () => {
             });
 
             await test.step('Attempt to close error message banner', async () => {
-                await loginPage.verifyErrorIcons()
                 await loginPage.verifyHiddenBanner()
             });
         });

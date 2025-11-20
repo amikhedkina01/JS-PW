@@ -1,6 +1,6 @@
 import { test, expect } from '../utils/fixture.js';
 import * as allure from 'allure-playwright';
-import { tags } from '../data/tags.js';
+import { tags as tagNames } from '../data/tags.js';
 
 
 
@@ -14,13 +14,14 @@ test.describe('Item Tests', () => {
         await poManager.basePage.goToBasePage();
         await poManager.loginPage.login(auth.username, auth.password);
         itemPage = poManager.itemPage
-        // Парсимо @tags з назви тесту і додаємо в Allure
+        // Playwright annotations are picked up by reporters (Allure reporter will convert them to labels)
         const tags = testInfo.title.match(/@\w+/g) ?? [];
-        tags.forEach(t => allure.tag(t.slice(1))); // -> smoke, regression, etc
-
+        for (const t of tags) {
+            testInfo.annotations.push({ type: 'tag', description: t.slice(1) });
+        }
     });
 
-    test('UI: Verify preview Item elements are correct', { tags: [tags.smoke] }, async ({ }) => {
+    test(`${tagNames.smoke} UI: Verify preview Item elements are correct`, async ({ }) => {
 
         await test.step('Key elements check', async () => {
 
@@ -30,7 +31,7 @@ test.describe('Item Tests', () => {
     });
 
 
-    test('Add item to cart', { tags: [tags.smoke] }, async ({ }) => {
+    test(`${tagNames.smoke} Add item to cart`, async ({ }) => {
 
         await test.step('Attempt to add item to a cart', async () => {
 
@@ -39,7 +40,7 @@ test.describe('Item Tests', () => {
 
     });
 
-    test('Remove item from cart', { tags: [tags.smoke] }, async () => {
+    test(`${tagNames.smoke} Remove item from cart`, async () => {
 
         await test.step('Precondition. Attempt to add item to a cart', async () => {
             await itemPage.verifyAddItemToCart(items.backpack);
@@ -52,14 +53,14 @@ test.describe('Item Tests', () => {
 
     });
 
-    test('Navigate to cart from Item page', { tags: [tags.regression] }, async () => {
+    test(`${tagNames.regression} Navigate to cart from Item page`, async () => {
 
         await test.step('Attempt to open cart', async () => {
             await itemPage.verifyCartIconWork();
         });
     });
 
-    test('UI smoke: Verify Item elements are correct', { tags: [tags.smoke] }, async () => {
+    test(`${tagNames.smoke} UI smoke: Verify Item elements are correct`, async () => {
 
         await test.step('Attempt to open Item page', async () => {
             await itemPage.verifyItemPageOpened(items.backpack);
@@ -73,7 +74,7 @@ test.describe('Item Tests', () => {
 
     });
 
-    test('Add item to cart from Item Page', { tags: [tags.smoke] }, async () => {
+    test(`${tagNames.smoke} Add item to cart from Item Page`, async () => {
 
         await test.step('Attempt to add to cart', async () => {
 
@@ -81,8 +82,7 @@ test.describe('Item Tests', () => {
         });
     });
 
-    test('Remove item from cart with Item Page', { tags: [tags.smoke] }, async () => {
-
+    test(`${tagNames.smoke} Remove item from cart with Item Page`, async () => {
 
         await test.step('Precondition. Attempt to add item to a cart', async () => {
             await itemPage.verifyItemPageOpened(items.backpack);

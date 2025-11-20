@@ -1,6 +1,6 @@
 import { test, expect } from '../utils/fixture.js';
-import * as allure from 'allure-playwright';
-import { tags } from '../data/tags.js';
+// import * as allure from 'allure-playwright';
+import { tags as tagNames } from '../data/tags.js';
 
 
 test.describe('Product Page Tests', () => {
@@ -14,14 +14,15 @@ test.describe('Product Page Tests', () => {
         await poManager.basePage.goToBasePage();
         await poManager.loginPage.login(auth.username, auth.password);
         productsPage = poManager.productsPage
-
-        // Парсимо @tags з назви тесту і додаємо в Allure
+        // Playwright annotations are picked up by reporters (Allure reporter will convert them to labels)
         const tags = testInfo.title.match(/@\w+/g) ?? [];
-        tags.forEach(t => allure.tag(t.slice(1))); // -> smoke, regression, etc
+        for (const t of tags) {
+            testInfo.annotations.push({ type: 'tag', description: t.slice(1) });
+        }
 
     });
 
-    test('UI: check page elements on Products page', { tags: [tags.smoke] }, async () => {
+    test(`${tagNames.smoke} UI: check page elements on Products page`, async () => {
 
         await test.step('Title & header controls are visible', async () => {
             await productsPage.headerCheck();
@@ -36,7 +37,7 @@ test.describe('Product Page Tests', () => {
         });
     });
 
-    test('Filter products by price', { tags: [tags.smoke] }, async () => {
+    test(`${tagNames.smoke} Filter products by price`, async () => {
 
         await test.step('Filtering. Low to High', async () => {
             await productsPage.verifyLowToHighFilter()

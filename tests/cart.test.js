@@ -1,6 +1,6 @@
 import { test, expect } from '../utils/fixture.js';
 import * as allure from 'allure-playwright';
-import { tags } from '../data/tags.js';
+import { tags as tagNames } from '../data/tags.js';
 
 test.describe('Cart Tests', () => {
     let cartPage;
@@ -13,10 +13,16 @@ test.describe('Cart Tests', () => {
         await poManager.loginPage.login(auth.username, auth.password);
         cartPage = poManager.cartPage
 
+        // Playwright annotations are picked up by reporters (Allure reporter will convert them to labels)
+        const tags = testInfo.title.match(/@\w+/g) ?? [];
+        for (const t of tags) {
+            testInfo.annotations.push({ type: 'tag', description: t.slice(1) });
+        }
+
     });
 
 
-    test('Verify bage is changing', { tags: [tags.smoke] }, async ({ }) => {
+    test(`${tagNames.smoke} Verify bag is changing`, async ({ }) => {
 
         await test.step('Attempt to add 1 item to a cart', async () => {
 
@@ -31,7 +37,7 @@ test.describe('Cart Tests', () => {
 
     });
 
-    test('Navigate to cart from Inventory page', { tags: [tags.regression] }, async () => {
+    test(`${tagNames.regression} Navigate to cart from Inventory page`, async () => {
 
         await test.step('Attempt to open cart with item added', async () => {
             await cartPage.verifyAddItemToCart(items.bikeLight);
@@ -47,7 +53,7 @@ test.describe('Cart Tests', () => {
         });
     });
 
-    test('Verify item is added to cart', { tags: [tags.smoke] }, async () => {
+    test(`${tagNames.smoke} Verify item is added to cart`, async () => {
 
         await test.step('Attempt to add item to a cart', async () => {
 
@@ -61,7 +67,7 @@ test.describe('Cart Tests', () => {
         });
     });
 
-    test('Verify items can be removed from cart', { tags: [tags.smoke] }, async () => {
+    test(`${tagNames.smoke} Verify items can be removed from cart`, async () => {
         await test.step('Precondition. Attempt to add item to a cart', async () => {
             await cartPage.verifyAddItemToCart(items.backpack);
         });
@@ -79,7 +85,7 @@ test.describe('Cart Tests', () => {
         });
     });
 
-    test('Verify multiple items are removed from cart', { tags: [tags.regression] }, async () => {
+    test(`${tagNames.regression} Verify multiple items are removed from cart`, async () => {
         await test.step('Precondition. Attempt to add items to a cart', async () => {
             await cartPage.verifyAddItemToCart(items.backpack);
             await cartPage.verifyAddItemToCart(items.bikeLight);

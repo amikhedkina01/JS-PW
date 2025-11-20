@@ -1,10 +1,6 @@
 export const tags = {
-    api: [
-        '@API',
-        '@resgression'
-    ],
+    api: '@api',
     smoke: '@smoke',
     regression: '@regression',
-    debug: '@debug',
 };
 

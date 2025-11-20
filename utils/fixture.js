@@ -1,4 +1,4 @@
-import { test as base, expect as baseExpect } from '@playwright/test';
+import { test as base, expect } from '@playwright/test';
 import { POManager } from '../pages/POManager.js';
 import { envConfig, negativeCases, expectedErrors } from './env.js';
 
@@ -11,7 +11,7 @@ export const test = base.extend({
         await use(new POManager(page));
     },
 
-    // НОВА фікстура з даними вибраного енва
+    // env data fixture
     envData: async ({ }, use) => {
         await use({
             auth: envConfig.auth,
@@ -19,11 +19,11 @@ export const test = base.extend({
             featureFlags: envConfig.featureFlags ?? {},
             negativeCases,
             expectedErrors,
-            raw: envConfig, // весь об’єкт, якщо знадобиться
+            raw: envConfig, // full raw config
         });
     },
 });
 
-export { baseExpect as expect };
+export { expect };
 
 

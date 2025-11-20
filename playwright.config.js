@@ -14,7 +14,7 @@ export default defineConfig(
     use: {
       baseURL: envConfig.baseURL, // <- береться з обраного env
       testIdAttribute: 'data-test',
-      trace: 'on-first-retry',  // Збираємо трасування на перших повторних спробах
+      trace: 'always',  // Збираємо трасування на перших повторних спробах
       screenshot: 'only-on-failure',  // Зберігаємо скріншоти лише на невдачі тесту
       video: 'on-first-retry',  // Записуємо відео при першому повторі тесту
     },
